@@ -10,13 +10,18 @@ from urllib.request import urlopen
 def main() -> None:
     directory = Path(__file__).resolve().parent
     lock = json.loads((directory / "jars.lock.json").read_text())
-    if hashlib.sha256((directory / "pom.xml").read_bytes()).hexdigest() != lock["pom_sha256"]:
+    if (
+        hashlib.sha256((directory / "pom.xml").read_bytes()).hexdigest()
+        != lock["pom_sha256"]
+    ):
         raise RuntimeError("pom.xml changed: regenerate and review the connector lock")
     destination = Path(sys.argv[1])
     destination.mkdir(parents=True, exist_ok=True)
     for artifact in lock["artifacts"]:
         path = artifact["path"]
-        with urlopen(f"https://repo.maven.apache.org/maven2/{path}", timeout=120) as response:
+        with urlopen(
+            f"https://repo.maven.apache.org/maven2/{path}", timeout=120
+        ) as response:
             data = response.read()
         if hashlib.sha256(data).hexdigest() != artifact["sha256"]:
             raise RuntimeError(f"Checksum mismatch for {path}")

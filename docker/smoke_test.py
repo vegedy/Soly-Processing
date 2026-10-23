@@ -14,13 +14,17 @@ def main() -> None:
     package = import_module("soly_processing")
     if package.__file__ is None:
         raise RuntimeError("Installed package has no file")
-    if not Path(package.__file__).resolve().is_relative_to(
-        Path(sysconfig.get_path("purelib")).resolve()
+    if (
+        not Path(package.__file__)
+        .resolve()
+        .is_relative_to(Path(sysconfig.get_path("purelib")).resolve())
     ):
         raise RuntimeError("Package was not imported from site-packages")
     if version("apache-flink") != "2.2.1":
         raise RuntimeError("Expected PyFlink 2.2.1")
-    java = subprocess.run(["java", "-version"], check=True, capture_output=True, text=True)
+    java = subprocess.run(
+        ["java", "-version"], check=True, capture_output=True, text=True
+    )
     print(java.stderr.strip(), flush=True)
     print(f"Python {sys.version.split()[0]}, PyFlink {version('apache-flink')}")
     print(f"soly-processing {version('soly-processing')}: {package.__file__}")
@@ -40,22 +44,28 @@ def main() -> None:
     jvm = gateway.jvm
     if not jvm.java.lang.System.getProperty("java.version").startswith("17."):
         raise RuntimeError("Expected Java 17 in the PyFlink gateway")
-    flink_version = jvm.org.apache.flink.runtime.util.EnvironmentInformation.getVersion()
+    flink_version = (
+        jvm.org.apache.flink.runtime.util.EnvironmentInformation.getVersion()
+    )
     if flink_version != "2.2.1":
         raise RuntimeError(f"Expected Flink 2.2.1, got {flink_version}")
     loader = jvm.java.lang.Thread.currentThread().getContextClassLoader()
-    for name in (
-        "org.apache.flink.connector.kafka.source.KafkaSource",
-        "org.apache.flink.connector.kafka.table.KafkaDynamicTableFactory",
-        "org.apache.kafka.clients.consumer.KafkaConsumer",
-        "org.apache.flink.connector.jdbc.core.table.JdbcDynamicTableFactory",
-        "org.apache.flink.connector.jdbc.postgres.database.dialect.PostgresDialect",
-        "org.postgresql.Driver",
-    ):
+    classes = {
+        "org.apache.flink.connector.kafka.source.KafkaSource": "flink-connector-kafka-5.0.0-2.2.jar",
+        "org.apache.flink.streaming.connectors.kafka.table.KafkaDynamicTableFactory": "flink-connector-kafka-5.0.0-2.2.jar",
+        "org.apache.kafka.clients.consumer.KafkaConsumer": "kafka-clients-4.2.0.jar",
+        "org.apache.flink.connector.jdbc.core.table.JdbcDynamicTableFactory": "flink-connector-jdbc-core-4.1.0-2.2.jar",
+        "org.apache.flink.connector.jdbc.postgres.database.dialect.PostgresDialect": "flink-connector-jdbc-postgres-4.1.0-2.2.jar",
+        "org.postgresql.Driver": "postgresql-42.7.14.jar",
+    }
+    for name, expected_jar in classes.items():
         clazz = jvm.java.lang.Class.forName(name, True, loader)
         clazz.getDeclaredConstructors()
         clazz.getDeclaredMethods()
-        print(f"Loaded {name}", flush=True)
+        origin = clazz.getProtectionDomain().getCodeSource().getLocation().getPath()
+        if Path(origin).name != expected_jar:
+            raise RuntimeError(f"Unexpected version for {name}: {origin}")
+        print(f"Loaded {name} from {expected_jar}", flush=True)
 
     table_env.execute_sql("""
         CREATE TEMPORARY TABLE smoke_kafka (payload STRING) WITH (

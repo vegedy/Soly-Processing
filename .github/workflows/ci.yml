@@ -40,4 +40,4 @@ jobs:
       - name: Build image
         run: docker build --platform linux/amd64 --tag soly-processing:ci .
       - name: Smoke-test installed service outside the source tree
-        run: docker run --rm --network none --workdir /tmp --entrypoint /opt/python/bin/python3 soly-processing:ci -I /opt/soly/smoke_test.py
+        run: docker run --rm --network none --hostname localhost --workdir /tmp --entrypoint /opt/python/bin/python3 soly-processing:ci -I /opt/soly/smoke_test.py
