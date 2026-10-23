@@ -1,0 +1,20 @@
+# Only the build inputs below enter the context: no secrets, checkpoints or data.
+**
+!Dockerfile
+!.dockerignore
+!pyproject.toml
+!README.md
+!LICENSE
+!requirements/
+!requirements/build.txt
+!requirements/runtime.txt
+!src/
+!src/soly_processing/
+!src/soly_processing/**/*.py
+!docker/
+!docker/install-system.sh
+!docker/smoke_test.py
+!connectors/
+!connectors/pom.xml
+!connectors/jars.lock.json
+!connectors/fetch_jars.py
