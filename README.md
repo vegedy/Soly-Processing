@@ -52,3 +52,12 @@ In der aktivierten Umgebung:
 ```bash
 python -m pytest
 ```
+
+## Linting und Formatierung
+
+```bash
+python -m ruff check .
+python -m ruff format --check .
+```
+
+Zum automatischen Formatieren: `python -m ruff format .`.
