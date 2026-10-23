@@ -37,3 +37,18 @@ In neuen Shells die vorhandene Umgebung erneut aktivieren; mit `deactivate`
 verlassen. `.venv/`, Caches und Build-Artefakte sind über `.gitignore`
 ausgeschlossen. Globale Paketinstallationen sind nicht erforderlich.
 
+## Struktur
+
+```text
+src/soly_processing/ Python-Paket
+tests/               Import-Smoke-Test und zukünftige Tests
+pyproject.toml       Paketmetadaten, Abhängigkeiten und Werkzeugkonfiguration
+```
+
+## Tests
+
+In der aktivierten Umgebung:
+
+```bash
+python -m pytest
+```
