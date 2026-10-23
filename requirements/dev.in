@@ -1,0 +1,3 @@
+-r build.txt
+# Include the Windows-only pytest dependency in the cross-platform lock.
+colorama==0.4.6

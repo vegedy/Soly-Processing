@@ -1,0 +1,121 @@
+{
+  "pom_sha256": "341b0cf23e78151498d2010b224dbfc94413320822f23bc4b7a98155de322805",
+  "artifacts": [
+    {
+      "path": "at/yawk/lz4/lz4-java/1.10.1/lz4-java-1.10.1.jar",
+      "sha256": "a58a84c4271e50df4c96ed916ccb7e48a869f8ed9cdcda1ad5d3d4c33b0214a3"
+    },
+    {
+      "path": "com/fasterxml/jackson/core/jackson-annotations/2.18.2/jackson-annotations-2.18.2.jar",
+      "sha256": "581bd61000ef7648943f781ca05689e56d03f6052748365a8e2b3a9b5d3fa32f"
+    },
+    {
+      "path": "com/fasterxml/jackson/core/jackson-core/2.18.2/jackson-core-2.18.2.jar",
+      "sha256": "d8054ae7c0d1c2d2f55d28e46026ebe5892881f3fab5f439233184381c3b4a1f"
+    },
+    {
+      "path": "com/fasterxml/jackson/core/jackson-databind/2.18.2/jackson-databind-2.18.2.jar",
+      "sha256": "4b364e6850dc89172fcf1d4dd26b8ff5488eda44ff4657e22dd265203dd5ab3c"
+    },
+    {
+      "path": "com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.18.2/jackson-dataformat-yaml-2.18.2.jar",
+      "sha256": "381a1c0711e4bb88561a6c0008b5a945465628ca07764ccd66a0d97ee07ad612"
+    },
+    {
+      "path": "com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.18.2/jackson-datatype-jdk8-2.18.2.jar",
+      "sha256": "f30d77f5826b9e9813342e84ab412095ed4ed5cf4fef6f93cebb848cb0fd0294"
+    },
+    {
+      "path": "com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.18.2/jackson-datatype-jsr310-2.18.2.jar",
+      "sha256": "e2d202d4606e23aeaf8a5a9632db06f5fefd5b63d251c3f503f9faaa78530e5c"
+    },
+    {
+      "path": "com/github/luben/zstd-jni/1.5.6-10/zstd-jni-1.5.6-10.jar",
+      "sha256": "b6c3237e24b8252a5a9c3a0e1ae30ef8f323412e74bd358548b7a9e527d676df"
+    },
+    {
+      "path": "commons-logging/commons-logging/1.3.5/commons-logging-1.3.5.jar",
+      "sha256": "6d7a744e4027649fbb50895df9497d109f98c766a637062fe8d2eabbb3140ba4"
+    },
+    {
+      "path": "io/micrometer/micrometer-commons/1.14.6/micrometer-commons-1.14.6.jar",
+      "sha256": "18b742923721c5b9718d758d42216c5e7a273779edfc82c93eea7c50a30f8637"
+    },
+    {
+      "path": "io/micrometer/micrometer-core/1.14.6/micrometer-core-1.14.6.jar",
+      "sha256": "5494326c07eb7ba7645c0784e8797aad654bee6d3fb625b92b88a07761d902d4"
+    },
+    {
+      "path": "io/micrometer/micrometer-observation/1.14.6/micrometer-observation-1.14.6.jar",
+      "sha256": "a37bac1c3687bcc40d057b37463d0c0d3ad8c1fcc4456003ef1218e1890e580c"
+    },
+    {
+      "path": "io/openlineage/openlineage-java/1.32.0/openlineage-java-1.32.0.jar",
+      "sha256": "d575b68bf72996e34d59013c9e877c19c0eea876fcccd49e246287048d09a54b"
+    },
+    {
+      "path": "io/openlineage/openlineage-sql-java/1.32.0/openlineage-sql-java-1.32.0.jar",
+      "sha256": "39e9be8f94c64d975eeb2c407937897e9654b69c0f7de3ba4cd47c946e7cf37c"
+    },
+    {
+      "path": "org/apache/commons/commons-lang3/3.18.0/commons-lang3-3.18.0.jar",
+      "sha256": "4eeeae8d20c078abb64b015ec158add383ac581571cddc45c68f0c9ae0230720"
+    },
+    {
+      "path": "org/apache/flink/flink-connector-base/2.2.1/flink-connector-base-2.2.1.jar",
+      "sha256": "5ea649f0abc04b7157b8de209c05baba5f7573733187ac11296e037c276ebe3a"
+    },
+    {
+      "path": "org/apache/flink/flink-connector-jdbc-core/4.1.0-2.2/flink-connector-jdbc-core-4.1.0-2.2.jar",
+      "sha256": "f8357ab799095e6486315db4019edf63ced762bc8c2eaa63614c7b962755564b"
+    },
+    {
+      "path": "org/apache/flink/flink-connector-jdbc-postgres/4.1.0-2.2/flink-connector-jdbc-postgres-4.1.0-2.2.jar",
+      "sha256": "ae6da5769d932123606f1b9e03d90d57cde9c1d0144df6ffa64a9701afb86d6b"
+    },
+    {
+      "path": "org/apache/flink/flink-connector-kafka/5.0.0-2.2/flink-connector-kafka-5.0.0-2.2.jar",
+      "sha256": "6bb63f7b09930d99745325393b481c092b0c26d626e738b7a1fd6fd8d7d4f1da"
+    },
+    {
+      "path": "org/apache/httpcomponents/client5/httpclient5/5.4.3/httpclient5-5.4.3.jar",
+      "sha256": "739e035679c68e15efa93b44c808a453bc98eaac1722e5a80cab15c026223022"
+    },
+    {
+      "path": "org/apache/httpcomponents/core5/httpcore5-h2/5.3.4/httpcore5-h2-5.3.4.jar",
+      "sha256": "1fb4f34e4b612e7c127ad693335583587850b17ce9b1c366f9de1ca49fe2c781"
+    },
+    {
+      "path": "org/apache/httpcomponents/core5/httpcore5/5.3.4/httpcore5-5.3.4.jar",
+      "sha256": "f2b2fd7a0164e8c3120cd8437bc9fea439239e165c17262b3e907daa7e979f80"
+    },
+    {
+      "path": "org/apache/kafka/kafka-clients/4.2.0/kafka-clients-4.2.0.jar",
+      "sha256": "bcf39f152c5553c2501a491fc4a73c5b0330741e8eed96a481323b8ee89738af"
+    },
+    {
+      "path": "org/checkerframework/checker-qual/3.55.1/checker-qual-3.55.1.jar",
+      "sha256": "857658c8bdcbff794949a8d9922f88d63ee3751c203c7cd7d21ea97f9e745288"
+    },
+    {
+      "path": "org/hdrhistogram/HdrHistogram/2.2.2/HdrHistogram-2.2.2.jar",
+      "sha256": "22d1d4316c4ec13a68b559e98c8256d69071593731da96136640f864fa14fad8"
+    },
+    {
+      "path": "org/latencyutils/LatencyUtils/2.0.3/LatencyUtils-2.0.3.jar",
+      "sha256": "a32a9ffa06b2f4e01c5360f8f9df7bc5d9454a5d373cd8f361347fa5a57165ec"
+    },
+    {
+      "path": "org/postgresql/postgresql/42.7.14/postgresql-42.7.14.jar",
+      "sha256": "73914527305a40cce504b0d3d90b23caf565136912d607ae8ae7c5895512332c"
+    },
+    {
+      "path": "org/xerial/snappy/snappy-java/1.1.10.7/snappy-java-1.1.10.7.jar",
+      "sha256": "4c766cb3f855415ee734b2392949a0b6f12a60879334a74518deaf6270d32e36"
+    },
+    {
+      "path": "org/yaml/snakeyaml/2.3/snakeyaml-2.3.jar",
+      "sha256": "63a76fe66b652360bd4c2c107e6f0258daa7d4bb492008ba8c26fcd230ff9146"
+    }
+  ]
+}
