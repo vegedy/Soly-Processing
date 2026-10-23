@@ -61,3 +61,11 @@ python -m ruff format --check .
 ```
 
 Zum automatischen Formatieren: `python -m ruff format .`.
+
+## Typprüfung
+
+```bash
+python -m mypy src tests
+```
+
+Die strikte Typprüfung gilt wie im Simulator für eigenen Quellcode und Tests.
