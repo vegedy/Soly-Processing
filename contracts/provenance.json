@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/vegedy/Soly",
+  "commit": "abd467e82f1bf57279ae3c14a01a765389daad90",
+  "sha256": {
+    "contracts/v1/examples/enrichment.json": "cdb5155b7e80a5136fcde1afe43ebbd2eff5ee46e22e04355ab0d905690b7249",
+    "contracts/v1/examples/event-cases.json": "4cb0f2aa55b9e753a0366ba82a99803b3b0613baae5b4f663fe94d0ddb54be8e",
+    "contracts/v1/examples/replay-drain.json": "51546e3d93b1867553e60b9d360e995ce429e949712045e3e81a0c13cf79c09c",
+    "contracts/v1/examples/sensor-profile.json": "18119ce0dc9ab5661c0d3203be14f6b0987a1804010efa4464461fbab0169167",
+    "contracts/v1/examples/sequences.json": "be6ff062505a8602fba20c2bad28033e039d5d1538c1485fc2801d3a02b6d4bb",
+    "contracts/v1/kafka-event.schema.json": "87861f7d0fafdb353ec2719ec718a30e0a93524c20389a324b8c5d7ce73c2813",
+    "contracts/v1/raw-event.schema.json": "e6d23c70add7678155c426ad02859f7602d3e1db1a9c636c4f7073c8853d1000",
+    "contracts/v1/replay-metadata.schema.json": "40ef00eaf5264928de10bcdbf1263aa1f75adbbdf751801891969e9d114d5ae4",
+    "contracts/v1/sensor-catalog.json": "6c16d446f09515aed7ca6bfb42f789b345d8a2885391398211cff1aef6e40732",
+    "contracts/v1/sensor-catalog.schema.json": "1e31b2f22ef94fc54509e900b78b3b03a0dd41e2622156d65b73420f9a324409",
+    "contracts/v1/sensor-profile.schema.json": "1bb49e0d1cd71e1f3a5d29abfc1673b896bff694e4319f44096af05967666f86"
+  }
+}
