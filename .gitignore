@@ -21,3 +21,9 @@ build/
 dist/
 *.egg-info/
 .eggs/
+
+# Isolated lock generation environment
+.venv-lock/
+
+# Maven resolution output; only checksums and dependency tree are tracked
+connectors/target/
