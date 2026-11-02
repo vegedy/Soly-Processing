@@ -203,3 +203,15 @@ benötigen eine neue Version; unbekannte Versionen werden künftig ausdrücklich
 abgelehnt. Eine Vertragsaktualisierung übernimmt alle Artefakte und das
 Herkunftsmanifest gemeinsam und wird mit den zentralen Vertragsprüfungen geprüft.
 Der abschließende Hauptrepo-CI-Lauf kontrolliert die Kopie und ihre Herkunft.
+
+## Mitarbeit und Arbeitsregeln
+
+[AGENTS.md](AGENTS.md) enthält die kurzen Arbeitsregeln für diesen eigenständigen
+Service. Die zentrale [Beitragsanleitung](https://github.com/vegedy/Soly/blob/main/CONTRIBUTING.md)
+und der [Git-Workflow](https://github.com/vegedy/Soly/blob/main/Soly-Issue-und-Git-Workflow.md)
+erklären Issues, SOLY-Branches, Service-PRs und die anschließende Submodule-Integration.
+Die [Technologieentscheidungen](https://github.com/vegedy/Soly/blob/main/Soly-Technologieentscheidungen.md)
+unterscheiden historische Auswahl und implementierten Stand. Diese zentralen
+Anleitungen werden mit dem zugehörigen SOLY-17-Hauptrepo-PR veröffentlicht;
+bis zu dessen Merge gelten die hier dokumentierten lokalen Einrichtungsschritte.
+Review und Merge aller PRs übernimmt der Nutzer.
