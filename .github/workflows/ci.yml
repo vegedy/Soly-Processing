@@ -22,8 +22,11 @@ jobs:
           java-version: '17'
       - name: Set up development dependencies
         run: ./dev.sh setup --use-current-python
-      - name: Check repository
+      - name: Check repository through Unix
         run: ./dev.sh check --use-current-python
+      - name: Check repository through PowerShell
+        shell: pwsh
+        run: ./dev.ps1 check --use-current-python
 
   docker:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
