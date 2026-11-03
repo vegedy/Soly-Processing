@@ -211,7 +211,4 @@ Service. Die zentrale [Beitragsanleitung](https://github.com/vegedy/Soly/blob/ma
 und der [Git-Workflow](https://github.com/vegedy/Soly/blob/main/Soly-Issue-und-Git-Workflow.md)
 erklären Issues, SOLY-Branches, Service-PRs und die anschließende Submodule-Integration.
 Die [Technologieentscheidungen](https://github.com/vegedy/Soly/blob/main/Soly-Technologieentscheidungen.md)
-unterscheiden historische Auswahl und implementierten Stand. Diese zentralen
-Anleitungen werden mit dem zugehörigen SOLY-17-Hauptrepo-PR veröffentlicht;
-bis zu dessen Merge gelten die hier dokumentierten lokalen Einrichtungsschritte.
-Review und Merge aller PRs übernimmt der Nutzer.
+unterscheiden historische Auswahl und implementierten Stand.
