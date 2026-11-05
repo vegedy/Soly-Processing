@@ -51,6 +51,9 @@ Unter PowerShell 7 innerhalb von Linux:
 an. Externe Fehlercodes werden weitergegeben. Kein Befehl aktualisiert Submodule,
 löscht lokale Daten oder verändert globale Systemeinstellungen.
 
+`docker-smoke` überspringt die lokale `.venv` und verwendet einen Host-Interpreter;
+`SOLY_PYTHON` bleibt als ausdrückliche Vorgabe vorrangig.
+
 Interpreterwahl: `SOLY_PYTHON` (ein vollständiger Dateipfad, keine zusätzlichen
 Argumente), vorhandene `.venv`, dann `python3.12`/`python3`/`python` unter Unix;
 PowerShell versucht vor den Python-Befehlen zusätzlich `py -3.12`. Eine ungeeignete
