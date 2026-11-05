@@ -298,3 +298,8 @@ und der [Git-Workflow](https://github.com/vegedy/Soly/blob/main/Soly-Issue-und-G
 erklären Issues, SOLY-Branches, Service-PRs und die anschließende Submodule-Integration.
 Die [Technologieentscheidungen](https://github.com/vegedy/Soly/blob/main/Soly-Technologieentscheidungen.md)
 unterscheiden historische Auswahl und implementierten Stand.
+
+Die CI prüft zusätzlich den lokalen Setup-Weg in einem frischen Checkout mit
+Leerzeichen: Unix-Setup, erneutes PowerShell-Setup mit Erhalt der bestehenden
+`.venv`, danach `check` über beide Einstiege ohne `--use-current-python`.
+Alle Aufrufe dieses Jobs erfolgen außerhalb des Checkout-Verzeichnisses.
