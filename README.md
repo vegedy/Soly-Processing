@@ -11,9 +11,11 @@ und die Planung mit den Connectoren ohne externe Dienste oder Zugangsdaten.
 oder `docker-smoke` mit Linux-Containern. Native Windows-/macOS-Aufrufe
 von `setup`, `check` und `format` werden abgelehnt.
 
-Voraussetzung: **Python 3.12.15**. `dev.sh` (POSIX-Shell unter Unix) und `dev.ps1`
+Voraussetzung für lokale Entwicklung: **Python 3.12.x** (z. B. 3.12.10). `dev.sh` (POSIX-Shell unter Unix) und `dev.ps1`
 (PowerShell 7 unter Linux) delegieren an `scripts/dev.py` mit
-Python-Standardbibliothek. Jeder Checkout besitzt eine eigene `.venv`; Aktivierung
+Python-Standardbibliothek. Lokal sind alle 3.12-Patchversionen zugelassen.
+**CI und Docker bleiben auf Python 3.12.15 festgelegt**; Locks und Image-Pins
+werden nicht verändert. Jeder Checkout besitzt eine eigene `.venv`; Aktivierung
 ist unnötig. Die Befehle bestimmen den Repository-Pfad selbst. Auch ein Aufruf aus
 einem anderen Verzeichnis oder ein Checkout-Pfad mit Leerzeichen funktioniert:
 
@@ -105,7 +107,7 @@ Die Prüfung von Java 17 erfolgt vor der Installation.
 
 Voraussetzung ist eine laufende Docker Engine. Ein frischer Service-Checkout ohne
 Hauptrepo und ohne `.venv` genügt; der Wrapper benötigt einen Python-Interpreter
-(empfohlen 3.12.15). Der Build benötigt Netzwerkzugriff auf die
+(empfohlen 3.12.x). Der Build benötigt Netzwerkzugriff auf die
 festgelegten Paketquellen; der Smoke-Test benötigt keinen Netzwerkzugriff.
 
 ```bash
