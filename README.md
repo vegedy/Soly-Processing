@@ -5,46 +5,115 @@ Der fachliche Flink-Job, Kafka-Konsum, Datenbank-Schreibvorgänge und der vollst
 Pipeline-Test folgen separat. Der aktuelle Container-Smoke-Test prüft die Laufzeit
 und die Planung mit den Connectoren ohne externe Dienste oder Zugangsdaten.
 
-## Lokale Einrichtung und Prüfungen
+## Entwicklungsbefehle
 
-Voraussetzung: **Python 3.12.15**, **Java 17** und ein passendes `JAVA_HOME`.
-Geprüfte Plattform: **Linux x86_64**. Alle Befehle im Service-Checkout ausführen;
-das Hauptrepo ist dafür nicht erforderlich. macOS und Windows sind nicht verifiziert
-und können eigene Plattform-Lockstände benötigen.
+**Entwicklungsplattform:** Linux x86_64 mit Java 17; unter Windows derselbe
+Linux-Weg in WSL2 oder in Linux-Containern. Die Befehle `setup`, `check` und
+`format` benötigen diese Linux-Umgebung.
+
+Voraussetzung für lokale Entwicklung: **Python 3.12.x**. `dev.sh`
+(POSIX-Shell unter Linux) und `dev.ps1`
+(PowerShell 7 unter Linux) delegieren an `scripts/dev.py` mit
+Python-Standardbibliothek. Lokal sind alle 3.12-Patchversionen zugelassen.
+**CI und Docker bleiben auf Python 3.12.15 festgelegt**; Locks und Image-Pins
+werden nicht verändert. Jeder Checkout besitzt eine eigene `.venv`; Aktivierung
+ist unnötig. Die Befehle bestimmen den Repository-Pfad selbst. Auch ein Aufruf aus
+einem anderen Verzeichnis oder ein Checkout-Pfad mit Leerzeichen funktioniert:
 
 ```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-python -m pip install --require-hashes --only-binary=:all: -r requirements/build.txt
-python -m pip install --require-hashes --no-build-isolation -r requirements/dev.txt
-python -m pip install --no-deps --no-build-isolation -e ".[dev]"
-python -m pip check
-python -m pytest
-python -m ruff check .
-python -m ruff format --check .
-python -m mypy src tests
+"/pfad mit Leerzeichen/Soly-Processing/dev.sh" setup
+"/pfad mit Leerzeichen/Soly-Processing/dev.sh" check
 ```
 
-Für die PowerShell-Umgebung die ersten beiden Befehle durch
-`py -3.12 -m venv .venv` und `.\.venv\Scripts\Activate.ps1` ersetzen.
-Die übrigen Prüfkommandos sind identisch. Globale Paketinstallationen sind unnötig.
-Mit `deactivate` die Umgebung verlassen; in neuen Shells wieder aktivieren.
+Im Repository unter Unix:
 
-Die Toolversionen bleiben pytest **9.1.1**, Ruff **0.17.2** und mypy **2.4.0**.
-Einige PyFlink-Abhängigkeiten werden nur als Quellpakete bereitgestellt. Deshalb
-zuerst den festgeschriebenen Build-Backend installieren und danach mit
-`--no-build-isolation` arbeiten. Fremdartefakte werden anhand der SHA-256-Hashes
-geprüft; es wird keine zusätzliche ungepinnte Build-Umgebung erzeugt.
+```bash
+./dev.sh setup
+./dev.sh check
+./dev.sh format
+```
+
+Unter PowerShell 7 innerhalb von Linux:
+
+```powershell
+.\dev.ps1 setup
+.\dev.ps1 check
+.\dev.ps1 format
+# Aus einem anderen Verzeichnis:
+& '/pfad mit Leerzeichen/Soly-Processing/dev.ps1' check
+```
+
+| Befehl | Wirkung |
+|---|---|
+| `setup` | Erstellt oder verwendet `.venv`, installiert vorhandene Hash-Locks und prüft Abhängigkeiten. Erneut ausführbar; keine Lock-Neuauflösung. |
+| `check` | `pip check`, pytest, Ruff-Linting, Ruff-Formatprüfung und mypy einschließlich `scripts/`; stoppt beim ersten Fehler. |
+| `format` | Schreibt ausdrücklich Ruff-Formatänderungen in Projektdateien. |
+| `docker-smoke` | Baut `linux/amd64` als `soly-processing:dev-smoke` und führt den vorhandenen isolierten Container-Smoke-Test aus. |
+
+`check` formatiert keine Dateien und legt Tool-Caches/Bytecode nicht im Checkout
+an. Externe Fehlercodes werden weitergegeben. Kein Befehl aktualisiert Submodule,
+löscht lokale Daten oder verändert globale Systemeinstellungen.
+
+`docker-smoke` überspringt die lokale `.venv` und verwendet einen Host-Interpreter;
+`SOLY_PYTHON` bleibt als ausdrückliche Vorgabe vorrangig.
+
+Interpreterwahl: `SOLY_PYTHON` (ein vollständiger Dateipfad, keine zusätzlichen
+Argumente), vorhandene `.venv`, dann `python3.12`/`python3`/`python` unter Unix;
+PowerShell versucht vor den Python-Befehlen zusätzlich `py -3.12`. Eine ungeeignete
+Python-Version oder unvollständige `.venv` führt zu einem Hinweis, nicht zum
+Löschen/Ersetzen. Bei Bedarf die vorhandene Umgebung zuerst selbst prüfen und
+beiseitelegen. Einen bestimmten Interpreter auswählen:
+
+```bash
+SOLY_PYTHON='/pfad zu Python/bin/python3.12' ./dev.sh setup
+```
+
+```powershell
+$env:SOLY_PYTHON = '/pfad zu Python/bin/python3.12'
+.\dev.ps1 setup
+```
+
+Falls die lokale PowerShell-Richtlinie Skripte sperrt, die geltende Richtlinie
+prüfen oder den Python-Einstieg direkt aufrufen; die Skripte ändern keine
+Sicherheitseinstellungen und verwenden keinen Execution-Policy-Bypass:
+
+```powershell
+python3.12 scripts/dev.py setup
+& ./.venv/bin/python scripts/dev.py check
+```
+
+Die CI nutzt `setup --use-current-python` und `check --use-current-python` mit dem
+bereits durch Actions eingerichteten Python. Lokal erlaubt `setup` diese Option
+nur in einer virtuellen Umgebung; außerhalb davon ist sie ausschließlich mit
+`CI=true` vorgesehen. Normalerweise ohne diese Option arbeiten. Die Skripte und
+Textdateien verwenden festgelegte Zeilenenden; Vertragsartefakte behalten über
+`.gitattributes` ihre exakten Bytes.
+
+Processing-Entwicklung ist auf **Linux x86_64** begrenzt. Zusätzlich sind
+**Java 17**, ein passendes `JAVA_HOME` und die für PyFlink-Quellpakete benötigten
+Buildwerkzeuge erforderlich. Unter Windows **WSL2** nutzen, den Checkout im
+Linux-Dateisystem ablegen und dort `./dev.sh setup` / `./dev.sh check` ausführen.
+Native Windows-/macOS-Aufrufe von `setup`, `check` und `format` werden mit einem
+Hinweis abgelehnt. Alternativ von Windows/macOS `docker-smoke` mit Docker Desktop
+und Linux-Containern nutzen. Der Host braucht dafür weder Java 17 noch PyFlink;
+eine lokale `.venv` ist unnötig. Es wird keine native Plattformunterstützung behauptet.
+
+`setup` installiert zuerst `requirements/build.txt` als gehashte Wheels, dann
+`requirements/dev.txt` mit `--require-hashes --no-build-isolation`, anschließend
+das eigene Paket mit `--no-deps --no-build-isolation -e ".[dev]"`.
+Der Dev-Lock wird wegen der PyFlink-Quellabhängigkeiten nicht auf Wheels beschränkt.
+Die Prüfung von Java 17 erfolgt vor der Installation.
 
 ## Docker-Build und Smoke-Test
 
 Voraussetzung ist eine laufende Docker Engine. Ein frischer Service-Checkout ohne
-Hauptrepo und ohne `.venv` genügt. Der Build benötigt Netzwerkzugriff auf die
+Hauptrepo und ohne `.venv` genügt; der Wrapper benötigt einen Python-Interpreter
+(empfohlen 3.12.x). Der Build benötigt Netzwerkzugriff auf die
 festgelegten Paketquellen; der Smoke-Test benötigt keinen Netzwerkzugriff.
 
 ```bash
-docker build --platform linux/amd64 --tag soly-processing:local .
-docker run --rm --network none --hostname localhost --workdir /tmp --entrypoint /opt/python/bin/python3 soly-processing:local -I /opt/soly/smoke_test.py
+./dev.sh docker-smoke
+# PowerShell: .\dev.ps1 docker-smoke
 ```
 
 Der Test läuft außerhalb des Quellbaums ohne eingebundene Arbeitsverzeichnisse und
@@ -98,6 +167,8 @@ Hashes fixiert; bitweise identische Layer oder Wheel-Zeitstempel werden nicht ga
 `connectors/pom.xml` beschreibt die direkten Maven-Abhängigkeiten und
 `connectors/dependency-tree.txt` ihre aufgelösten transitiven Laufzeitabhängigkeiten.
 Der vollständige Stand mit SHA-256-Hashes liegt in `connectors/jars.lock.json`.
+Die gemeinsame `.gitattributes` legt für XML-Dateien LF-Zeilenenden fest,
+damit der POM-Hash unter Linux und Windows identisch bleibt.
 Der Image-Build lädt ausschließlich diese Artefakte von Maven Central und prüft
 jeden Hash. Bei geändertem POM ohne erneuerte Lockdatei schlägt er fehl.
 
@@ -126,8 +197,8 @@ Python-/Connector-Stand. Die Rollen lassen sich beispielsweise so starten
 
 ```bash
 docker network create soly-processing-local
-docker run -d --name soly-jobmanager --network soly-processing-local -e JOB_MANAGER_RPC_ADDRESS=soly-jobmanager soly-processing:local jobmanager
-docker run -d --name soly-taskmanager --network soly-processing-local -e JOB_MANAGER_RPC_ADDRESS=soly-jobmanager soly-processing:local taskmanager
+docker run -d --name soly-jobmanager --network soly-processing-local -e JOB_MANAGER_RPC_ADDRESS=soly-jobmanager soly-processing:dev-smoke jobmanager
+docker run -d --name soly-taskmanager --network soly-processing-local -e JOB_MANAGER_RPC_ADDRESS=soly-jobmanager soly-processing:dev-smoke taskmanager
 docker logs soly-jobmanager
 docker logs soly-taskmanager
 ```
@@ -145,19 +216,21 @@ und schließt insbesondere `.git`, `.venv`, Caches, Checkpoints und lokale Daten
 
 Die Python-Prüfungen laufen bei **jedem Push** und bei **Pull Requests nach `main`**
 mit Python **3.12.15**, Java **17** und den lokalen Toolversionen. Nach der
-hashgesicherten Installation laufen `pip check`, pytest, Ruff-Linting,
-Ruff-Formatprüfung und mypy für `src` und `tests`.
+hashgesicherten Installation über `./dev.sh setup --use-current-python` führt
+`./dev.sh check --use-current-python` die gemeinsamen Prüfungen aus, einschließlich
+der Typprüfung von `src`, `tests` und `scripts`. Die Processing-CI bleibt auf
+Ubuntu 24.04; sie behauptet keine native Windows-/macOS-Unterstützung.
 
 **Docker-Build und Laufzeit-Smoke-Test laufen ausschließlich bei Pushes auf `main`**
-und erst nach erfolgreichen Python-Prüfungen. Beide verwenden die oben gezeigten
-Build-/Smoke-Kommandos. Fehler lassen den Workflow fehlschlagen. Die Actions sind
+und erst nach erfolgreichen Python-Prüfungen. Beide laufen über `./dev.sh docker-smoke`. Fehler lassen den Workflow fehlschlagen. Die Actions sind
 über Commits fixiert, Berechtigungen auf `contents: read` begrenzt. Es werden keine
 Images in eine Registry veröffentlicht und keine produktiven Secrets benötigt.
 
 ## Abhängigkeiten bewusst aktualisieren
 
 Python-Locks mit Python **3.12.15** und **pip-tools 7.5.2** in einer separaten
-Umgebung (`.venv-lock`, Aktivierung wie oben) erzeugen. Die bisherigen Constraints
+Linux-Umgebung (`python3.12 -m venv .venv-lock`, dann
+`source .venv-lock/bin/activate`) erzeugen. Die bisherigen Constraints
 bei beabsichtigten Versionswechseln ausdrücklich mit ändern:
 
 ```bash
@@ -180,6 +253,28 @@ Python-Installation in einer frischen Umgebung und den vollständigen Docker-Bui
 samt Laufzeit-Smoke-Test nachvollziehen. Basis-Digest, Python-Quellhash und
 Ubuntu-Snapshot werden nur gemeinsam mit erneuter Laufzeitprüfung aktualisiert.
 
+
+## Validierung von SOLY-18
+
+Geprüfter Entwicklungsweg: **Linux x86_64**, unter Windows über **WSL2**.
+Stand **19. November 2026**: Ubuntu 22.04.5 mit Python 3.12.16, POSIX-Shell
+und PowerShell 7.5.4.
+Mit **Temurin 17.0.20.1+1** und gesetztem `JAVA_HOME` bestanden **33 Tests**
+sowie pip check, Ruff und mypy. Frisches und wiederholtes Setup mit Erhalt
+der `.venv`, Check und Formatierung über beide Einstiege sowie Setup/Check
+mit `--use-current-python` waren erfolgreich. Inhalt und Änderungszeit der
+Projektdateien blieben unverändert.
+
+Unter nativem Windows wurden `setup`, `check` und `format` mit Windows
+PowerShell 5.1 und PowerShell 7 geprüft: Alle sechs Aufrufe beenden sich mit
+Fehlercode 1 und dem Linux-/WSL2-Hinweis, bevor eine `.venv` angelegt wird.
+
+Der aktuelle Container-Build und `docker-smoke` bestanden auf **linux/amd64**
+mit Docker Engine 29.1.3 und der festgeschriebenen Laufzeit.
+
+Hash-Locks, CI-Pins, Image-Digests und Vertragsartefakte blieben unverändert.
+Die lokalen Paketmetadaten erlauben Python `>=3.12,<3.13`; CI und Container
+verwenden weiterhin Python 3.12.15. macOS wurde nicht geprüft.
 
 ## Unterstützter Ereignisvertrag
 
@@ -212,3 +307,8 @@ und der [Git-Workflow](https://github.com/vegedy/Soly/blob/main/Soly-Issue-und-G
 erklären Issues, SOLY-Branches, Service-PRs und die anschließende Submodule-Integration.
 Die [Technologieentscheidungen](https://github.com/vegedy/Soly/blob/main/Soly-Technologieentscheidungen.md)
 unterscheiden historische Auswahl und implementierten Stand.
+
+Die CI prüft zusätzlich den lokalen Setup-Weg in einem frischen Checkout mit
+Leerzeichen: Unix-Setup, erneutes PowerShell-Setup mit Erhalt der bestehenden
+`.venv`, danach `check` über beide Einstiege ohne `--use-current-python`.
+Alle Aufrufe dieses Jobs erfolgen außerhalb des Checkout-Verzeichnisses.

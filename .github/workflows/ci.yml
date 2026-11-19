@@ -20,16 +20,13 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Install locked dependencies and service
-        run: |
-          python -m pip install --require-hashes --only-binary=:all: -r requirements/build.txt
-          python -m pip install --require-hashes --no-build-isolation -r requirements/dev.txt
-          python -m pip install --no-deps --no-build-isolation -e '.[dev]'
-      - run: python -m pip check
-      - run: python -m pytest
-      - run: python -m ruff check .
-      - run: python -m ruff format --check .
-      - run: python -m mypy src tests
+      - name: Set up development dependencies
+        run: ./dev.sh setup --use-current-python
+      - name: Check repository through Unix
+        run: ./dev.sh check --use-current-python
+      - name: Check repository through PowerShell
+        shell: pwsh
+        run: ./dev.ps1 check --use-current-python
 
   docker:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -37,7 +34,42 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Build image
-        run: docker build --platform linux/amd64 --tag soly-processing:ci .
-      - name: Smoke-test installed service outside the source tree
-        run: docker run --rm --network none --hostname localhost --workdir /tmp --entrypoint /opt/python/bin/python3 soly-processing:ci -I /opt/soly/smoke_test.py
+      - name: Build and smoke-test installed service outside the source tree
+        run: ./dev.sh docker-smoke
+
+  local-setup:
+    runs-on: ubuntu-24.04
+    env:
+      REPO_DIR: ${{ github.workspace }}/checkout with spaces
+    defaults:
+      run:
+        working-directory: /tmp
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          path: checkout with spaces
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12.15'
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Create a fresh local environment through Unix
+        run: |
+          test ! -e "$REPO_DIR/.venv"
+          "$REPO_DIR/dev.sh" setup
+          touch "$REPO_DIR/.venv/reuse-probe"
+      - name: Repeat setup through PowerShell and preserve the environment
+        shell: pwsh
+        run: |
+          & "$env:REPO_DIR/dev.ps1" setup
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if (-not (Test-Path -LiteralPath "$env:REPO_DIR/.venv/reuse-probe")) {
+            throw 'Repeated setup replaced the existing environment'
+          }
+      - name: Check the local environment through Unix
+        run: '"$REPO_DIR/dev.sh" check'
+      - name: Check the local environment through PowerShell
+        shell: pwsh
+        run: '& "$env:REPO_DIR/dev.ps1" check'

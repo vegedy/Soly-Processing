@@ -5,7 +5,7 @@
   Aktuell bestehen Paketgrundlage, Container-Smoke-Test, CI und Vertragskopien;
   die fachliche Implementierung folgt separat. Code unter `src/`, Tests in `tests/`.
 - Einrichtung, Locks und Docker-Kommandos: [README.md](README.md).
-  Python 3.12.15 mit eigener `.venv` verwenden. Java 17 mit passendem `JAVA_HOME` verwenden. Zuerst den Build-Lock als Wheels installieren, dann den Dev-Lock mit `--no-build-isolation`, anschließend das eigene Paket ohne Abhängigkeitsauflösung installieren. Nicht den gesamten Dev-Lock auf Wheels beschränken: PyFlink hat Quell-Abhängigkeiten. Linux x86_64 ist die geprüfte Plattform.
+  Lokal Python 3.12.x mit eigener `.venv` verwenden; CI und Docker bleiben auf 3.12.15 festgelegt. Java 17 mit passendem `JAVA_HOME` verwenden. Zuerst den Build-Lock als Wheels installieren, dann den Dev-Lock mit `--no-build-isolation`, anschließend das eigene Paket ohne Abhängigkeitsauflösung installieren. Nicht den gesamten Dev-Lock auf Wheels beschränken: PyFlink hat Quell-Abhängigkeiten. Linux x86_64 ist die geprüfte Plattform.
 - Issues zentral in [vegedy/Soly](https://github.com/vegedy/Soly/issues).
   Vollständiger Ablauf: [CONTRIBUTING.md](https://github.com/vegedy/Soly/blob/main/CONTRIBUTING.md),
   [Git-Workflow](https://github.com/vegedy/Soly/blob/main/Soly-Issue-und-Git-Workflow.md),
@@ -26,11 +26,13 @@
   eine neue Version. Aktualisierte Kopien, Manifest und Spezifikationslink gemeinsam
   übernehmen; im Hauptrepo Vertrags- und `service_copies`-Prüfungen ausführen.
   Keine Laufzeitimporte aus Nachbarrepos oder Schema-Downloads beim Start.
-- Im Service nach README-Einrichtung prüfen: `python -m pip check`,
-  `python -m pytest`, `python -m ruff check .`, `python -m ruff format --check .`,
-  `python -m mypy src tests`. CI führt diese Prüfungen bei Push/PR aus;
-  Docker-Build/Smoke-Test nur bei Push auf `main`. Bei Änderungen an Laufzeit,
-  Abhängigkeiten oder Container zusätzlich Docker-Build und Smoke-Test nach README.
+- Einrichtung/Prüfungen über `./dev.sh setup` und `./dev.sh check`; PowerShell
+  entsprechend über `dev.ps1`. Keine Aktivierung nötig. `format` schreibt
+  Änderungen. `check` prüft pip, pytest, Ruff und mypy für `src tests scripts`.
+  `docker-smoke` baut und prüft das bisherige isolierte Laufzeitimage.
+  CI verwendet diese Einstiege mit `--use-current-python` für Python-Prüfungen;
+  Docker-Build/Smoke-Test nur bei Push auf `main`. Processing unter Windows
+  über WSL2 oder Linux-Container verwenden, nicht nativ.
 - Laufzeitpins, Hash-Locks und Image-Digests nur bewusst mit Begründung und erneuter
   Validierung ändern; Generatoren stehen in der README. Keine Secrets, privaten
   Rohdaten, lokalen Umgebungen oder Caches einchecken. Im PR tatsächliche Tests und
