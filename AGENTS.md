@@ -5,7 +5,7 @@
   Aktuell bestehen Paketgrundlage, Container-Smoke-Test, CI und Vertragskopien;
   die fachliche Implementierung folgt separat. Code unter `src/`, Tests in `tests/`.
 - Einrichtung, Locks und Docker-Kommandos: [README.md](README.md).
-  Python 3.12.15 mit eigener `.venv` verwenden. Java 17 mit passendem `JAVA_HOME` verwenden. Zuerst den Build-Lock als Wheels installieren, dann den Dev-Lock mit `--no-build-isolation`, anschließend das eigene Paket ohne Abhängigkeitsauflösung installieren. Nicht den gesamten Dev-Lock auf Wheels beschränken: PyFlink hat Quell-Abhängigkeiten. Linux x86_64 ist die geprüfte Plattform.
+  Lokal Python 3.12.x mit eigener `.venv` verwenden; CI und Docker bleiben auf 3.12.15 festgelegt. Java 17 mit passendem `JAVA_HOME` verwenden. Zuerst den Build-Lock als Wheels installieren, dann den Dev-Lock mit `--no-build-isolation`, anschließend das eigene Paket ohne Abhängigkeitsauflösung installieren. Nicht den gesamten Dev-Lock auf Wheels beschränken: PyFlink hat Quell-Abhängigkeiten. Linux x86_64 ist die geprüfte Plattform.
 - Issues zentral in [vegedy/Soly](https://github.com/vegedy/Soly/issues).
   Vollständiger Ablauf: [CONTRIBUTING.md](https://github.com/vegedy/Soly/blob/main/CONTRIBUTING.md),
   [Git-Workflow](https://github.com/vegedy/Soly/blob/main/Soly-Issue-und-Git-Workflow.md),

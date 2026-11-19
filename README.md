@@ -7,11 +7,12 @@ und die Planung mit den Connectoren ohne externe Dienste oder Zugangsdaten.
 
 ## Entwicklungsbefehle
 
-**Windows:** Entwicklung über WSL2 mit `./dev.sh` im Linux-Checkout,
-oder `docker-smoke` mit Linux-Containern. Native Windows-/macOS-Aufrufe
-von `setup`, `check` und `format` werden abgelehnt.
+**Entwicklungsplattform:** Linux x86_64 mit Java 17; unter Windows derselbe
+Linux-Weg in WSL2 oder in Linux-Containern. Die Befehle `setup`, `check` und
+`format` benötigen diese Linux-Umgebung.
 
-Voraussetzung für lokale Entwicklung: **Python 3.12.x** (z. B. 3.12.10). `dev.sh` (POSIX-Shell unter Unix) und `dev.ps1`
+Voraussetzung für lokale Entwicklung: **Python 3.12.x**. `dev.sh`
+(POSIX-Shell unter Linux) und `dev.ps1`
 (PowerShell 7 unter Linux) delegieren an `scripts/dev.py` mit
 Python-Standardbibliothek. Lokal sind alle 3.12-Patchversionen zugelassen.
 **CI und Docker bleiben auf Python 3.12.15 festgelegt**; Locks und Image-Pins
@@ -166,6 +167,8 @@ Hashes fixiert; bitweise identische Layer oder Wheel-Zeitstempel werden nicht ga
 `connectors/pom.xml` beschreibt die direkten Maven-Abhängigkeiten und
 `connectors/dependency-tree.txt` ihre aufgelösten transitiven Laufzeitabhängigkeiten.
 Der vollständige Stand mit SHA-256-Hashes liegt in `connectors/jars.lock.json`.
+Die gemeinsame `.gitattributes` legt für XML-Dateien LF-Zeilenenden fest,
+damit der POM-Hash unter Linux und Windows identisch bleibt.
 Der Image-Build lädt ausschließlich diese Artefakte von Maven Central und prüft
 jeden Hash. Bei geändertem POM ohne erneuerte Lockdatei schlägt er fehl.
 
@@ -253,21 +256,25 @@ Ubuntu-Snapshot werden nur gemeinsam mit erneuter Laufzeitprüfung aktualisiert.
 
 ## Validierung von SOLY-18
 
-Am **3. November 2026** unter **Linux x86_64**, Python **3.12.15** und
-**PowerShell 7.5.4** tatsächlich ausgeführt: frischer eigenständiger Checkout in
-einem Pfad mit Leerzeichen, `setup` über Unix und PowerShell erneut ausgeführt,
-`check` und `format` über beide Einstiege, außerdem `setup/check` mit
-`--use-current-python`. Alle Prüfungen erfolgreich (**15 Tests**, pip check,
-Ruff und mypy). Dateiinhalt und Änderungszeit der Projektdateien blieben bei
-beiden `check`-Aufrufen unverändert. Fehlercodes, unvollständige Umgebungen,
-fehlende Werkzeuge und Plattformhinweise sind zusätzlich durch Regressionstests
-abgedeckt. `./dev.sh docker-smoke` wurde auf **linux/amd64** erfolgreich ausgeführt.
-Locks, Laufzeitpins und der bestehende Container-Smoke-Test wurden nicht geändert.
+Geprüfter Entwicklungsweg: **Linux x86_64**, unter Windows über **WSL2**.
+Stand **19. November 2026**: Ubuntu 22.04.5 mit Python 3.12.16, POSIX-Shell
+und PowerShell 7.5.4.
+Mit **Temurin 17.0.20.1+1** und gesetztem `JAVA_HOME` bestanden **33 Tests**
+sowie pip check, Ruff und mypy. Frisches und wiederholtes Setup mit Erhalt
+der `.venv`, Check und Formatierung über beide Einstiege sowie Setup/Check
+mit `--use-current-python` waren erfolgreich. Inhalt und Änderungszeit der
+Projektdateien blieben unverändert.
 
-Die lokale Processing-Prüfung verwendete `JAVA_HOME` mit **OpenJDK 17**;
-der Container prüfte **Temurin 17.0.20.1**, PyFlink 2.2.1 und die vorhandenen
-Kafka-/JDBC-Pläne. Native Windows-/macOS- und WSL2-Ausführung wurden lokal nicht
-getestet. WSL2 ist der beschriebene Linux-Weg, kein separat erbrachter Nachweis.
+Unter nativem Windows wurden `setup`, `check` und `format` mit Windows
+PowerShell 5.1 und PowerShell 7 geprüft: Alle sechs Aufrufe beenden sich mit
+Fehlercode 1 und dem Linux-/WSL2-Hinweis, bevor eine `.venv` angelegt wird.
+
+Der aktuelle Container-Build und `docker-smoke` bestanden auf **linux/amd64**
+mit Docker Engine 29.1.3 und der festgeschriebenen Laufzeit.
+
+Hash-Locks, CI-Pins, Image-Digests und Vertragsartefakte blieben unverändert.
+Die lokalen Paketmetadaten erlauben Python `>=3.12,<3.13`; CI und Container
+verwenden weiterhin Python 3.12.15. macOS wurde nicht geprüft.
 
 ## Unterstützter Ereignisvertrag
 
